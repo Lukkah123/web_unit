@@ -84,21 +84,26 @@ input:checked + .ball:before {
         </div>
     </div>
 
+
+
 <div class="container">
     <div class="row">
         <div class="col">
             <h2 class="mt-5">Turn ON/OFF the lamp</h2>
-            <form method="post" th:object="${Lamp}">
                 <div class="ml-2">
                     <div class="form-group mt-3">
                         <label class="toggle">
                             <input type="checkbox">
                             <span class="ball"></span>
                         </label>
-                        <span class="ml-2">Lamp <input type="checkbox" th:field="*{lightOn}" data-toggle="switch"/></span>
-                    </div>
-                </div>
-            </form>
+                        <p id ="kitchenLamp"></p><input type="checkbox" data-toggle="switch1"/>   
+                        <label class="toggle">
+                            <input type="checkbox">
+                            <span class="ball"></span>
+                        </label>
+                        <p id ="bathroomLamp"></p><input type="checkbox" th:field="lightOn2" data-toggle="switch"/>                           
+                    </div>                   
+                </div>           
         </div>
     </div>
 
@@ -147,6 +152,17 @@ fetch('http://localhost:8080/getAllDeviceStatuses')
 </script>
 
 <script>
+
+/*
+Denna jsonSträngen med olika devices med attributer och dess status får vi från servern
+
+[{"deviceID":"Kitchen Lamp","on":false},
+{"deviceID":"Bathroom Lamp","on":true},
+{"temperature":19.1,"deviceID":"Livingroom Thermometer"},
+{"deviceID":"Livingroom Curtain","open":true}]
+
+*/
+
 var socket = new WebSocket('ws://localhost:8080/websocket');
 socket.onopen = function (event) {
     socket.send('getDevices');
@@ -154,6 +170,12 @@ socket.onopen = function (event) {
 
 socket.onmessage = function (event) {
     console.log(event.data);
+    const obj = JSON.parse(event.data);
+
+    //testar lite på lampobjektet
+    //skriver ut de olika objekten i respektive container (funkar bara då servern är igång och vi hämtar datan från databasen)
+    document.getElementById("kitchenLamp").innerHTML = obj[0].deviceID;
+    document.getElementById("bathroomLamp").innerHTML = obj[1].deviceID;
 }
 </script>
 
