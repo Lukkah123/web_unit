@@ -93,12 +93,12 @@ input:checked + .ball:before {
                 <div class="ml-2">
                     <div class="form-group mt-3">
                         <label class="toggle">
-                            <input type="checkbox">
+                            <input type="checkbox" id="checkbox1">
                             <span class="ball"></span>
                         </label>
-                        <p id ="kitchenLamp"></p><input type="checkbox" data-toggle="switch1"/>   
+                        <p id ="kitchenLamp"></p><input type="checkbox" data-toggle="switch"/>   
                         <label class="toggle">
-                            <input type="checkbox">
+                            <input type="checkbox" id="checkbox2">
                             <span class="ball"></span>
                         </label>
                         <p id ="bathroomLamp"></p><input type="checkbox" th:field="lightOn2" data-toggle="switch"/>                           
@@ -114,7 +114,7 @@ input:checked + .ball:before {
                 <div class="ml-2">
                     <div class="form-group mt-3">
                         <label class="toggle">
-                            <input type="checkbox">
+                            <input type="checkbox" id="checkbox3">
                             <span class="ball"></span>
                         </label>
                         <span class="ml-2">Curtains <input type="checkbox" th:field="*{open}" data-toggle="switch"/></span>
@@ -155,11 +155,11 @@ fetch('http://localhost:8080/getAllDeviceStatuses')
 
 /*
 Denna jsonSträngen med olika devices med attributer och dess status får vi från servern
-
+Disclaimer: kan ändras ifall någon annan unit ändras status i databasen =)
 [{"deviceID":"Kitchen Lamp","on":false},
 {"deviceID":"Bathroom Lamp","on":true},
 {"temperature":19.1,"deviceID":"Livingroom Thermometer"},
-{"deviceID":"Livingroom Curtain","open":true}]
+{"deviceID":"Livingroom Curtain","open":false}]
 
 */
 
@@ -172,10 +172,17 @@ socket.onmessage = function (event) {
     console.log(event.data);
     const obj = JSON.parse(event.data);
 
-    //testar lite på lampobjektet
+    //testar lite på lampobjektet och curtain
     //skriver ut de olika objekten i respektive container (funkar bara då servern är igång och vi hämtar datan från databasen)
     document.getElementById("kitchenLamp").innerHTML = obj[0].deviceID;
+    document.getElementById("checkbox1").checked = obj[0].on;
+    document.getElementById("checkbox2").checked = obj[1].on;
+    document.getElementById("checkbox3").checked = obj[3].open;
     document.getElementById("bathroomLamp").innerHTML = obj[1].deviceID;
+
+
+
+
 }
 </script>
 
