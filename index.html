@@ -166,6 +166,7 @@ Disclaimer: kan ändras ifall någon annan unit ändras status i databasen =)
 var socket = new WebSocket('ws://localhost:8080/websocket');
 socket.onopen = function (event) {
     socket.send('getDevices');
+   // socket.send("changeDeviceStatus={'_id':'Livingroom Curtain', 'open':'false'}" );
 };
 
 socket.onmessage = function (event) {
@@ -180,6 +181,15 @@ socket.onmessage = function (event) {
     document.getElementById("checkbox3").checked = obj[3].open;
     document.getElementById("bathroomLamp").innerHTML = obj[1].deviceID;
 
+
+//TODO 1
+//skicka till servern för att uppdatera status på devices
+
+//TODO 2
+//lägga till alla devices
+
+//TODO 3 
+//snyggare GUI XD
 
 
 
