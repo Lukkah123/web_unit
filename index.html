@@ -142,15 +142,6 @@ input:checked + .ball:before {
     </div>
 
 </div>
-
-<script>
-    /*
-fetch('http://localhost:8080/getAllDeviceStatuses')
-  .then(response => response.json())
-  .then(data => console.log(data));
-  */
-</script>
-
 <script>
 
 /*
@@ -168,7 +159,7 @@ socket.onopen = function (event) {
     socket.send('getDevices');
 
     //får endast tillbaka strängen som ändras när servern broadcastar
-   //socket.send("changeDeviceStatus={'_id':'Livingroom Curtain', 'open':'false'}" );
+   
 };
 
 socket.onmessage = function (event) {
@@ -186,11 +177,15 @@ socket.onmessage = function (event) {
 
 //TODO 1
 //skicka till servern för att uppdatera status på devices
+//socket.send("changeDeviceStatus={'_id':'Livingroom Curtain', 'open':'false'}" );
 
-//TODO 2
+//TODO 2 
+//Broadcasting
+
+//TODO 3
 //lägga till alla devices
 
-//TODO 3 
+//TODO 4 
 //snyggare GUI XD
 
 
