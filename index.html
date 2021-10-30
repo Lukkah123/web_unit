@@ -166,7 +166,9 @@ Disclaimer: kan ändras ifall någon annan unit ändras status i databasen =)
 var socket = new WebSocket('ws://localhost:8080/websocket');
 socket.onopen = function (event) {
     socket.send('getDevices');
-   // socket.send("changeDeviceStatus={'_id':'Livingroom Curtain', 'open':'false'}" );
+
+    //får endast tillbaka strängen som ändras när servern broadcastar
+   //socket.send("changeDeviceStatus={'_id':'Livingroom Curtain', 'open':'false'}" );
 };
 
 socket.onmessage = function (event) {
