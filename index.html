@@ -156,7 +156,7 @@ socket.onmessage = function (event) {
     console.log(event.data);
     const obj = JSON.parse(event.data);
     console.log(obj);
-    updateData();
+   
 
     //testar lite på lampobjektet och curtain
     //skriver ut de olika objekten i respektive container (funkar bara då servern är igång och vi hämtar datan från databasen)
@@ -164,6 +164,7 @@ socket.onmessage = function (event) {
     document.getElementById("checkBoxKitchenLamp").checked = obj[0].on;
     document.getElementById("checkboxBathroomLamp").checked = obj[1].on;
     document.getElementById("checkboxCurtain").checked = obj[3].open;
+    setTimeout(updateData, 2500);
 }
 
 //TODO 1
@@ -207,13 +208,13 @@ function bathroomLamp(){
 
 //TODO 2 
 //Broadcasting
-function startUpdate(){
-    nIntervId = setInterval(updateData, 100000);
-}
-
 function updateData(){
     socket.send('getDevices');
 }
+
+
+
+
 //TODO 3
 //lägga till alla devices
 
