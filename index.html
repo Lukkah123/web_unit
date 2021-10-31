@@ -93,12 +93,12 @@ input:checked + .ball:before {
                 <div class="ml-2">
                     <div class="form-group mt-3">
                         <label class="toggle">
-                            <input type="checkbox" id="checkbox1">
+                            <input type="checkbox" onclick="kitchenLamp()" id="checkBoxKitchenLamp">
                             <span class="ball"></span>
                         </label>
                         <p>Kitchen Lamp</p><input type="checkbox" data-toggle="switch"/>   
                         <label class="toggle">
-                            <input type="checkbox" id="checkbox2">
+                            <input type="checkbox" onclick="bathroomLamp()" id="checkboxBathroomLamp">
                             <span class="ball"></span>
                         </label>
                         <p>Bathroom Lamp</p><input type="checkbox" th:field="lightOn2" data-toggle="switch"/>                           
@@ -156,13 +156,14 @@ socket.onmessage = function (event) {
     console.log(event.data);
     const obj = JSON.parse(event.data);
     console.log(obj);
+    updateData();
 
     //testar lite på lampobjektet och curtain
     //skriver ut de olika objekten i respektive container (funkar bara då servern är igång och vi hämtar datan från databasen)
    
-    document.getElementById("checkbox1").checked = obj[0].on;
-    document.getElementById("checkbox2").checked = obj[1].on;
-    document.getElementById("checkbox3").checked = obj[3].open;
+    document.getElementById("checkBoxKitchenLamp").checked = obj[0].on;
+    document.getElementById("checkboxBathroomLamp").checked = obj[1].on;
+    document.getElementById("checkboxCurtain").checked = obj[3].open;
 }
 
 //TODO 1
@@ -180,9 +181,39 @@ function curtainOpen(){
     }
 }
 
+
+function kitchenLamp(){
+    var checkbox = document.getElementById('checkBoxKitchenLamp');
+    if(checkbox.checked == true){
+        socket.send("changeDeviceStatus={'_id':'Kitchen Lamp', 'on':'true'}" );
+        socket.send('getDevices');
+    } else {
+        socket.send("changeDeviceStatus={'_id':'Kitchen Lamp', 'on':'false'}" );
+        socket.send('getDevices');
+    }
+}
+
+function bathroomLamp(){
+    var checkbox = document.getElementById('checkboxBathroomLamp');
+    if(checkbox.checked == true){
+        socket.send("changeDeviceStatus={'_id':'Bathroom Lamp', 'on':'true'}" );
+        socket.send('getDevices');
+    } else {
+        socket.send("changeDeviceStatus={'_id':'Bathroom Lamp', 'on':'false'}" );
+        socket.send('getDevices');
+    }
+}
+
+
 //TODO 2 
 //Broadcasting
+function startUpdate(){
+    nIntervId = setInterval(updateData, 100000);
+}
 
+function updateData(){
+    socket.send('getDevices');
+}
 //TODO 3
 //lägga till alla devices
 
