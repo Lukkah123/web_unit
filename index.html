@@ -8,15 +8,14 @@
 <body>
 <style>
 
-.container {
-    background-color: #3498db;
-}
+
 
 .row:first-child{
     background-color: #58d68d ;
     margin-top: 15px;
     border-radius: 20px;
     box-shadow:5px 5px 15px black;
+    padding: 15px 15px;
 }
 
 .row:nth-of-type(2){
@@ -24,12 +23,14 @@
     margin-top: 15px;
     border-radius: 20px;
     box-shadow:5px 5px 15px black;
+    padding: 15px 15px;
 }
 .row:nth-of-type(3){
     background-color: #6992bd;
     margin-top: 15px;
     border-radius: 20px;
     box-shadow:5px 5px 15px black;
+    padding: 15px 15px;
 }
 
 label.toggle {
@@ -75,6 +76,12 @@ input:checked + .ball {
 
 input:checked + .ball:before {
     transform: translateX(44px);
+}
+
+#temp{
+font-weight: bold;
+font-size: 25px;
+padding: 5px 0px;
 }
 
 </style>
@@ -126,20 +133,16 @@ input:checked + .ball:before {
 
     <div class="row">
         <div class="col">
-            <h2 class="mt-5">Alarm</h2>
-            <form method="post" th:object="${Alarm}">
+            <h2 class="mt-5">Temperature</h2>
                 <div class="ml-2">
                     <div class="form-group mt-3">
-                        <label class="toggle">
-                            <input type="checkbox">
-                            <span class="ball"></span>
-                        </label>
-                        <span class="ml-2">Alarm <input type="checkbox" th:field="*{on}" data-toggle="switch"/></span>
+                        <p id ="temp"> </p>
                     </div>
                 </div>
             </form>
         </div>
     </div>
+
 
 </div>
 <script>
@@ -164,7 +167,8 @@ socket.onmessage = function (event) {
     document.getElementById("checkBoxKitchenLamp").checked = obj[0].on;
     document.getElementById("checkboxBathroomLamp").checked = obj[1].on;
     document.getElementById("checkboxCurtain").checked = obj[3].open;
-    setTimeout(updateData, 2500);
+    document.getElementById("temp").innerHTML=obj[2].temperature;
+    setTimeout(updateData, 3000);
 }
 
 //TODO 1
