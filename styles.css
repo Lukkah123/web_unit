@@ -38,3 +38,78 @@
     font-size: 2rem;
 }
 
+.row:first-child {
+    background-color: #58d68d;
+    margin-top: 15px;
+    border-radius: 20px;
+    box-shadow: 5px 5px 15px black;
+    padding: 15px 15px;
+}
+
+.row:nth-of-type(2) {
+    background-color: #a569bd;
+    margin-top: 15px;
+    border-radius: 20px;
+    box-shadow: 5px 5px 15px black;
+    padding: 15px 15px;
+}
+
+.row:nth-of-type(3) {
+    background-color: #6992bd;
+    margin-top: 15px;
+    border-radius: 20px;
+    box-shadow: 5px 5px 15px black;
+    padding: 15px 15px;
+}
+
+label.toggle {
+    position: relative;
+    display: inline-block;
+    width: 80px;
+    height: 34px;
+}
+
+input[type="checkbox"] {
+    width: 0;
+    height: 0;
+    opacity: 0;
+}
+
+.ball {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .3s;
+    border-radius: 25px;
+}
+
+.ball::before {
+    position: absolute;
+    content: '';
+    height: 26px;
+    width: 26px;
+    left: 5px;
+    bottom: 4px;
+    background-color: #fff;
+    transition: .3s;
+    border-radius: 25px;
+}
+
+input:checked + .ball {
+    background-color: #3498db;
+}
+
+input:checked + .ball:before {
+    transform: translateX(44px);
+}
+
+#temp {
+    font-weight: bold;
+    font-size: 25px;
+    padding: 5px 0;
+}
+

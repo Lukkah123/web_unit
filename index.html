@@ -6,140 +6,60 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<style>
-
-
-
-.row:first-child{
-    background-color: #58d68d ;
-    margin-top: 15px;
-    border-radius: 20px;
-    box-shadow:5px 5px 15px black;
-    padding: 15px 15px;
-}
-
-.row:nth-of-type(2){
-    background-color: #a569bd  ;
-    margin-top: 15px;
-    border-radius: 20px;
-    box-shadow:5px 5px 15px black;
-    padding: 15px 15px;
-}
-.row:nth-of-type(3){
-    background-color: #6992bd;
-    margin-top: 15px;
-    border-radius: 20px;
-    box-shadow:5px 5px 15px black;
-    padding: 15px 15px;
-}
-
-label.toggle {
-    position: relative;
-    display: inline-block;
-    width: 80px;
-    height: 34px;
-}
-
-input[type="checkbox"] {
-    width: 0;
-    height: 0;
-    opacity: 0;
-}
-
-.ball {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #ccc;
-    transition: .3s;
-    border-radius: 25px;
-}
-
-.ball::before {
-    position: absolute;
-    content: '';
-    height: 26px;
-    width: 26px;
-    left: 5px;
-    bottom: 4px;
-    background-color: #fff;
-    transition: .3s;
-    border-radius: 25px;
-}
-
-input:checked + .ball {
-    background-color: #3498db;
-}
-
-input:checked + .ball:before {
-    transform: translateX(44px);
-}
-
-#temp{
-font-weight: bold;
-font-size: 25px;
-padding: 5px 0px;
-}
-
-</style>
-    <div class="navbar">
-        <div class="navbar__container">
-            <a href="/" id="navbar__logo"> SMART HOUSE </a>
-        </div>
+<div class="navbar">
+    <div class="navbar__container">
+        <a href="/" id="navbar__logo"> SMART HOUSE </a>
     </div>
-
+</div>
 
 
 <div class="container">
     <div class="row">
         <div class="col">
             <h2 class="mt-5">Turn ON/OFF the lamp</h2>
-                <div class="ml-2">
-                    <div class="form-group mt-3">
-                        <label class="toggle">
-                            <input type="checkbox" onclick="kitchenLamp()" id="checkBoxKitchenLamp">
-                            <span class="ball"></span>
-                        </label>
-                        <p>Kitchen Lamp</p><input type="checkbox" data-toggle="switch"/>   
-                        <label class="toggle">
-                            <input type="checkbox" onclick="bathroomLamp()" id="checkboxBathroomLamp">
-                            <span class="ball"></span>
-                        </label>
-                        <p>Bathroom Lamp</p><input type="checkbox" th:field="lightOn2" data-toggle="switch"/>                           
-                    </div>                   
-                </div>           
+            <div class="ml-2">
+                <div class="form-group mt-3">
+                    <label class="toggle">
+                        <input type="checkbox" onclick="changeDevice('Kitchen Lamp', 'lamp')" id="checkBoxKitchenLamp">
+                        <span class="ball"></span>
+                    </label>
+                    <p>Kitchen Lamp</p><input type="checkbox" data-toggle="switch"/>
+                    <label class="toggle">
+                        <input type="checkbox" onclick="changeDevice('Bathroom Lamp', 'lamp')"
+                               id="checkboxBathroomLamp">
+                        <span class="ball"></span>
+                    </label>
+                    <p>Bathroom Lamp</p><input type="checkbox" data-toggle="switch"/>
+                </div>
+            </div>
         </div>
     </div>
 
     <div class="row">
         <div class="col">
             <h2 class="mt-5">Open/Close Curtains</h2>
-            <form method="post" th:object="${Curtains}">
-                <div class="ml-2">
-                    <div class="form-group mt-3">
-                        <label class="toggle">
-                            <input type="checkbox" onclick="curtainOpen()" id="checkboxCurtain">
-                            <span class="ball"></span>
-                        </label>
-                        <span class="ml-2">Curtains <input type="checkbox" th:field="*{open}" data-toggle="switch"/></span>
-                    </div>
+            <div class="ml-2">
+                <div class="form-group mt-3">
+                    <label class="toggle">
+                        <input type="checkbox" onclick="changeDevice('Livingroom Curtain', 'curtain')"
+                               id="checkboxCurtain">
+                        <span class="ball"></span>
+                    </label>
+                    <span class="ml-2">Curtains <input type="checkbox"
+                                                       data-toggle="switch"/></span>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
 
     <div class="row">
         <div class="col">
             <h2 class="mt-5">Temperature</h2>
-                <div class="ml-2">
-                    <div class="form-group mt-3">
-                        <p id ="temp"> </p>
-                    </div>
+            <div class="ml-2">
+                <div class="form-group mt-3">
+                    <p id="temp"></p>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
 
@@ -147,83 +67,125 @@ padding: 5px 0px;
 </div>
 <script>
 
-var socket = new WebSocket('ws://localhost:8080/websocket');
-socket.onopen = function (event) {
-    socket.send('getDevices');
+let devices = [];
 
-    //får endast tillbaka strängen som ändras när servern broadcastar
-   
+const socket = new WebSocket('ws://localhost:8080/websocket');
+socket.onopen = function (event) {
+    socket.send("getDevices")
 };
 
 socket.onmessage = function (event) {
-    console.log(event.data);
-    const obj = JSON.parse(event.data);
-    console.log(obj);
-   
-
-    //testar lite på lampobjektet och curtain
-    //skriver ut de olika objekten i respektive container (funkar bara då servern är igång och vi hämtar datan från databasen)
-   
-    document.getElementById("checkBoxKitchenLamp").checked = obj[0].on;
-    document.getElementById("checkboxBathroomLamp").checked = obj[1].on;
-    document.getElementById("checkboxCurtain").checked = obj[3].open;
-    document.getElementById("temp").innerHTML=obj[2].temperature;
-    setTimeout(updateData, 3000);
-}
-
-//TODO 1
-//skicka till servern för att uppdatera status på devices
-//socket.send("changeDeviceStatus={'_id':'Livingroom Curtain', 'open':'true'}" );
-
-function curtainOpen(){
-    var checkbox = document.getElementById('checkboxCurtain');
-    if(checkbox.checked == true){
-        socket.send("changeDeviceStatus={'_id':'Livingroom Curtain', 'open':'true'}" );
-        socket.send('getDevices');
-    } else {
-        socket.send("changeDeviceStatus={'_id':'Livingroom Curtain', 'open':'false'}" );
-        socket.send('getDevices');
+    const res = event.data.split("=");
+    if (res[0] === "getDevices") {
+        getDevices(res) // Inserts all devices into devices Array
+    } else if (res[0] === "changeDeviceStatus") {
+        onBroadcast(res) // If a device change is broadcasted, then update UI and that device in devices Array
     }
 }
 
-
-function kitchenLamp(){
-    var checkbox = document.getElementById('checkBoxKitchenLamp');
-    if(checkbox.checked == true){
-        socket.send("changeDeviceStatus={'_id':'Kitchen Lamp', 'on':'true'}" );
-        socket.send('getDevices');
-    } else {
-        socket.send("changeDeviceStatus={'_id':'Kitchen Lamp', 'on':'false'}" );
-        socket.send('getDevices');
+function getDevices(res) {
+    let i;
+    var json = JSON.parse(res[1])
+    for (i in json.lampList) {
+        devices.push(json.lampList[i])
+    }
+    for (i in json.fanList) {
+        devices.push(json.fanList[i])
+    }
+    for (i in json.curtainList) {
+        devices.push(json.curtainList[i])
+    }
+    for (i in json.temperatureSensorList) {
+        devices.push(json.temperatureSensorList[i])
+    }
+    for (let i = 0; i < devices.length; i++) {
+        let deviceName = devices[i].deviceID
+        if (deviceName === "Kitchen Lamp") {
+            if (devices[i].on === true)
+                document.getElementById("checkBoxKitchenLamp").checked = true
+            else
+                document.getElementById("checkBoxKitchenLamp").checked = false
+        }
+        if (deviceName === "Bathroom Lamp") {
+            if (devices[i].on === true)
+                document.getElementById("checkboxBathroomLamp").checked = true
+            else
+                document.getElementById("checkboxBathroomLamp").checked = false
+        }
+        if (deviceName === "Livingroom Curtain") {
+            if (devices[i].open === true)
+                document.getElementById("checkboxCurtain").checked = true
+            else
+                document.getElementById("checkboxCurtain").checked = false
+        }
+        if (deviceName === "Livingroom Thermometer") {
+            document.getElementById("temp").innerText = devices[i].temperature
+        }
     }
 }
 
-function bathroomLamp(){
-    var checkbox = document.getElementById('checkboxBathroomLamp');
-    if(checkbox.checked == true){
-        socket.send("changeDeviceStatus={'_id':'Bathroom Lamp', 'on':'true'}" );
-        socket.send('getDevices');
+function onBroadcast(res) {
+    let json = JSON.parse(res[1])
+    if (json.operation === "success") {
+        // Operation succeeded
+        let _id = json._id
+        let device = json.device
+        let option = json.option
+        if (_id === "Kitchen Lamp") {
+            toggleLamp("Kitchen Lamp", option)
+        }
+        if (_id === "Bathroom Lamp") {
+            toggleLamp("Bathroom Lamp", option)
+        }
+        if (_id === "Livingroom Curtain") {
+            toggleCurtain("Livingroom Curtain", option)
+        }
     } else {
-        socket.send("changeDeviceStatus={'_id':'Bathroom Lamp', 'on':'false'}" );
-        socket.send('getDevices');
+        // Operation Failed
+        let reason = json.reason
+        //console.log(reason)
     }
 }
 
-
-//TODO 2 
-//Broadcasting
-function updateData(){
-    socket.send('getDevices');
+function toggleLamp(deviceID, option) {
+    if (deviceID === "Kitchen Lamp") {
+        if (option.toString() === "true") {
+            document.getElementById("checkBoxKitchenLamp").checked = true
+        } else {
+            document.getElementById("checkBoxKitchenLamp").checked = false
+        }
+    }
+    if (deviceID === "Bathroom Lamp") {
+        if (option.toString() === "true") {
+            document.getElementById("checkboxBathroomLamp").checked = true
+        } else {
+            document.getElementById("checkboxBathroomLamp").checked = false
+        }
+    }
 }
 
+function toggleCurtain(deviceID, option) {
+    if (option.toString() === "true") {
+        document.getElementById("checkboxCurtain").checked = true
+    } else {
+        document.getElementById("checkboxCurtain").checked = false
+    }
+}
 
-
-
-//TODO 3
-//lägga till alla devices
-
-//TODO 4 
-//snyggare GUI XD
+function changeDevice(deviceName, deviceType) {
+    if (deviceType === "lamp") {
+        let on;
+        if (deviceName === "Kitchen Lamp")
+            on = document.getElementById("checkBoxKitchenLamp").checked
+        if (deviceName === "Bathroom Lamp")
+            on = document.getElementById("checkboxBathroomLamp").checked
+        socket.send("changeDeviceStatus={'_id':'" + deviceName + "', 'on':'" + on + "'}");
+    }
+    if (deviceType === "curtain") {
+        let open = document.getElementById("checkboxCurtain").checked
+        socket.send("changeDeviceStatus={'_id':'" + deviceName + "', 'open':'" + open + "'}");
+    }
+}
 
 </script>
 
