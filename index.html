@@ -63,19 +63,33 @@
         </div>
     </div>
 
+    <div class="row">
+        <div class="col">
+            <h2 class="mt-5">Fan</h2>
+            <div class="ml-2">
+                <div class="form-group mt-3">
+                    <input type="range" min="0" max="3" class="slider" id="fanSlider"
+                           onclick="changeDevice('Bedroom Fan', 'fan')">
+                    <p id="fanSpeed"></p>
+                </div>
+            </div>
+        </div>
+    </div>
 
 </div>
 <script>
 
 let devices = [];
 
-const socket = new WebSocket('ws://localhost:8080/websocket');
+const socket = new WebSocket('ws://ro01.beginit.se:1337/websocket');
 socket.onopen = function (event) {
     socket.send("getDevices")
+    socket.send("changeDeviceStatus={'_id':'Bedroom Fan', 'speed':'2'}")
 };
 
 socket.onmessage = function (event) {
     const res = event.data.split("=");
+    console.log(res[1])
     if (res[0] === "getDevices") {
         getDevices(res) // Inserts all devices into devices Array
     } else if (res[0] === "changeDeviceStatus") {
@@ -121,6 +135,9 @@ function getDevices(res) {
         if (deviceName === "Livingroom Thermometer") {
             document.getElementById("temp").innerText = devices[i].temperature
         }
+        if (deviceName === "Bedroom Fan") {
+            document.getElementById("fanSpeed").innerText = devices[i].speed
+        }
     }
 }
 
@@ -139,6 +156,9 @@ function onBroadcast(res) {
         }
         if (_id === "Livingroom Curtain") {
             toggleCurtain("Livingroom Curtain", option)
+        }
+        if (_id === "Bedroom Fan") {
+            toggleFan("Bedroom Fan", option)
         }
     } else {
         // Operation Failed
@@ -172,6 +192,11 @@ function toggleCurtain(deviceID, option) {
     }
 }
 
+function toggleFan(deviceID, option) {
+    document.getElementById("fanSpeed").innerText = option
+    document.getElementById("fanSlider").value = option
+}
+
 function changeDevice(deviceName, deviceType) {
     if (deviceType === "lamp") {
         let on;
@@ -184,6 +209,10 @@ function changeDevice(deviceName, deviceType) {
     if (deviceType === "curtain") {
         let open = document.getElementById("checkboxCurtain").checked
         socket.send("changeDeviceStatus={'_id':'" + deviceName + "', 'open':'" + open + "'}");
+    }
+    if (deviceType === "fan") {
+        let speed = document.getElementById("fanSlider").value
+        socket.send("changeDeviceStatus={'_id':'" + deviceName + "', 'speed':'" + speed + "'}");
     }
 }
 

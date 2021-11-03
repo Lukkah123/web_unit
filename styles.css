@@ -1,5 +1,4 @@
 
-
 .navbar {
     background: rgb(65, 59, 59);
     height: 80px;
@@ -62,6 +61,14 @@
     padding: 15px 15px;
 }
 
+.row:nth-of-type(4) {
+    background-color: orange;
+    margin-top: 15px;
+    border-radius: 20px;
+    box-shadow: 5px 5px 15px black;
+    padding: 15px 15px;
+}
+
 label.toggle {
     position: relative;
     display: inline-block;
@@ -112,4 +119,3 @@ input:checked + .ball:before {
     font-size: 25px;
     padding: 5px 0;
 }
-
