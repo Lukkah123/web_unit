@@ -30,6 +30,18 @@
                         <span class="ball"></span>
                     </label>
                     <p>Bathroom Lamp</p><input type="checkbox" data-toggle="switch"/>
+                    <label class="toggle">
+                        <input type="checkbox" onclick="changeDevice('Outdoor lamp', 'lamp')"
+                               id="checkboxOutdoorLamp">
+                        <span class="ball"></span>
+                    </label>
+                    <p>Outdoor Lamp</p><input type="checkbox" data-toggle="switch"/>
+                    <label class="toggle">
+                        <input type="checkbox" onclick="changeDevice('Indoor lamp', 'lamp')"
+                               id="checkboxIndoorLamp">
+                        <span class="ball"></span>
+                    </label>
+                    <p>Indoor Lamp</p><input type="checkbox" data-toggle="switch"/>
                 </div>
             </div>
         </div>
@@ -82,6 +94,8 @@
 let devices = [];
 
 const socket = new WebSocket('ws://ro01.beginit.se:1337/websocket');
+//const socket = new WebSocket('wss://127.0.0.1:8443/websocket');
+//const socket = new WebSocket('ws://194.47.40.108:1337/websocket');
 socket.onopen = function (event) {
     socket.send("getDevices")
     socket.send("changeDeviceStatus={'_id':'Bedroom Fan', 'speed':'2'}")
@@ -126,6 +140,18 @@ function getDevices(res) {
             else
                 document.getElementById("checkboxBathroomLamp").checked = false
         }
+        if (deviceName === "Outdoor lamp") {
+            if (devices[i].on === true)
+                document.getElementById("checkboxOutdoorLamp").checked = true
+            else
+                document.getElementById("checkboxOutdoorLamp").checked = false
+        }
+        if (deviceName === "Indoor lamp") {
+            if (devices[i].on === true)
+                document.getElementById("checkboxIndoorLamp").checked = true
+            else
+                document.getElementById("checkboxIndoorLamp").checked = false
+        }
         if (deviceName === "Livingroom Curtain") {
             if (devices[i].open === true)
                 document.getElementById("checkboxCurtain").checked = true
@@ -153,6 +179,12 @@ function onBroadcast(res) {
         }
         if (_id === "Bathroom Lamp") {
             toggleLamp("Bathroom Lamp", option)
+        }
+        if (_id === "Outdoor lamp") {
+            toggleLamp("Outdoor lamp", option)
+        }
+        if (_id === "Indoor lamp") {
+            toggleLamp("Indoor Lamp", option)
         }
         if (_id === "Livingroom Curtain") {
             toggleCurtain("Livingroom Curtain", option)
@@ -182,6 +214,20 @@ function toggleLamp(deviceID, option) {
             document.getElementById("checkboxBathroomLamp").checked = false
         }
     }
+    if (deviceID === "Outdoor lamp") {
+        if (option.toString() === "true") {
+            document.getElementById("checkboxOutdoorLamp").checked = true
+        } else {
+            document.getElementById("checkboxOutdoorLamp").checked = false
+        }
+    }
+    if (deviceID === "Indoor lamp") {
+        if (option.toString() === "true") {
+            document.getElementById("checkboxIndoorLamp").checked = true
+        } else {
+            document.getElementById("checkboxIndoorLamp").checked = false
+        }
+    }
 }
 
 function toggleCurtain(deviceID, option) {
@@ -204,6 +250,10 @@ function changeDevice(deviceName, deviceType) {
             on = document.getElementById("checkBoxKitchenLamp").checked
         if (deviceName === "Bathroom Lamp")
             on = document.getElementById("checkboxBathroomLamp").checked
+        if (deviceName === "Outdoor lamp")
+            on = document.getElementById("checkboxOutdoorLamp").checked
+        if (deviceName === "Indoor lamp")
+            on = document.getElementById("checkboxIndoorLamp").checked
         socket.send("changeDeviceStatus={'_id':'" + deviceName + "', 'on':'" + on + "'}");
     }
     if (deviceType === "curtain") {
