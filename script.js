@@ -1,11 +1,13 @@
 let devices = [];
-const socket = new WebSocket('wss://213.102.69.156:8443/websocket');
+//const socket = new WebSocket('wss://localhost:8443/henke/websocket');
+//const socket = new WebSocket('wss://localhost:8443/websocket');
+const socket = new WebSocket('wss://213.102.69.156:8443/henke/websocket');
 //const socket = new WebSocket('ws://ro01.beginit.se:1337/websocket');
-//const socket = new WebSocket('wss://127.0.0.1:8443/websocket');
+//const socket = new WebSocket('wss://127.0.0.1:8443/henke/websocket');
 //const socket = new WebSocket('ws://194.47.40.108:1337/websocket');
 socket.onopen = function (event) {
     socket.send("getDevices")
-    socket.send("changeDeviceStatus={'_id':'Bedroom Fan', 'speed':'2'}")
+    //socket.send("changeDeviceStatus={'_id':'Bedroom Fan', 'speed':'2'}")
 };
 
 socket.onmessage = function (event) {
