@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h1>Add a new device</h1>
+<form>
+    <input type="radio" id="lamp" name="newDevice" value="Lamp">
+    <label for="lamp">Lamp</label><br> 
+    <input type="radio" id="curtain" name="newDevice" value="Curtain">
+    <label for="curtain">Curtain</label><br>
+    <input type="radio" id="fan" name="newDevice" value="Fan">
+    <label for="fan">Fan</label><br><br>
+    Enter device name: <input type="text" id="inputText" name="deviceName"><br><br>
+    
+  </form>
+
+  <button onclick="addDevice()">Add the new device</button>
+
+<script>
+function addDevice() {
+    var deviceName = document.getElementById("inputText").value
+
+    if(document.getElementById("lamp").checked){
+        console.log("lamp")
+        console.log(deviceName)
+        //send the correct formatted string to the server
+    }
+    if(document.getElementById("curtain").checked){
+        console.log("curtain")
+        console.log(deviceName)
+    }
+    if(document.getElementById("fan").checked){
+        console.log("fan")
+        console.log(deviceName)
+    }
+
+    alert("new Device successfully added!")
+    window.location.href = "index.html";
+}
+</script>
+</body>
+</html>
