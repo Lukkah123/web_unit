@@ -1,8 +1,8 @@
 let devices = [];
 //const socket = new WebSocket('wss://localhost:8443/henke/websocket');
 //const socket = new WebSocket('wss://localhost:8443/websocket');
-const socket = new WebSocket('wss://213.102.69.156:8443/henke/websocket');
-//const socket = new WebSocket('ws://ro01.beginit.se:1337/websocket');
+//const socket = new WebSocket('wss://213.102.69.156:8443/henke/websocket');
+const socket = new WebSocket('ws://ro01.beginit.se:1337/websocket');
 //const socket = new WebSocket('wss://127.0.0.1:8443/henke/websocket');
 //const socket = new WebSocket('ws://194.47.40.108:1337/websocket');
 socket.onopen = function (event) {
@@ -36,42 +36,43 @@ function getDevices(res) {
         devices.push(json.temperatureSensorList[i])
     }
     for (let i = 0; i < devices.length; i++) {
-        let deviceName = devices[i].deviceID
+        let deviceName = devices[i]._id
         if (deviceName === "Kitchen Lamp") {
-            if (devices[i].on === true)
+            if (devices[i].status === true)
                 document.getElementById("checkBoxKitchenLamp").checked = true
             else
                 document.getElementById("checkBoxKitchenLamp").checked = false
         }
         if (deviceName === "Bathroom Lamp") {
-            if (devices[i].on === true)
+            if (devices[i].status === true)
                 document.getElementById("checkboxBathroomLamp").checked = true
             else
                 document.getElementById("checkboxBathroomLamp").checked = false
         }
         if (deviceName === "Outdoor lamp") {
-            if (devices[i].on === true)
+            if (devices[i].status === true)
                 document.getElementById("checkboxOutdoorLamp").checked = true
             else
                 document.getElementById("checkboxOutdoorLamp").checked = false
         }
         if (deviceName === "Indoor lamp") {
-            if (devices[i].on === true)
+            if (devices[i].status === true)
                 document.getElementById("checkboxIndoorLamp").checked = true
             else
                 document.getElementById("checkboxIndoorLamp").checked = false
         }
         if (deviceName === "Livingroom Curtain") {
-            if (devices[i].open === true)
+            if (devices[i].status === true)
                 document.getElementById("checkboxCurtain").checked = true
             else
                 document.getElementById("checkboxCurtain").checked = false
         }
         if (deviceName === "Livingroom Thermometer") {
-            document.getElementById("temp").innerText = devices[i].temperature
+            document.getElementById("temp").innerText = devices[i].status
         }
         if (deviceName === "Bedroom Fan") {
-            document.getElementById("fanSpeed").innerText = devices[i].speed
+            document.getElementById("fanSpeed").innerText = devices[i].status
+            document.getElementById("fanSlider").value = devices[i].status
         }
     }
 }
@@ -104,33 +105,33 @@ function onBroadcast(res) {
     } else {
         // Operation Failed
         let reason = json.reason
-        //console.log(reason)
+        console.log(reason)
     }
 }
 
-function toggleLamp(deviceID, option) {
-    if (deviceID === "Kitchen Lamp") {
+function toggleLamp(_id, option) {
+    if (_id === "Kitchen Lamp") {
         if (option.toString() === "true") {
             document.getElementById("checkBoxKitchenLamp").checked = true
         } else {
             document.getElementById("checkBoxKitchenLamp").checked = false
         }
     }
-    if (deviceID === "Bathroom Lamp") {
+    if (_id === "Bathroom Lamp") {
         if (option.toString() === "true") {
             document.getElementById("checkboxBathroomLamp").checked = true
         } else {
             document.getElementById("checkboxBathroomLamp").checked = false
         }
     }
-    if (deviceID === "Outdoor lamp") {
+    if (_id === "Outdoor lamp") {
         if (option.toString() === "true") {
             document.getElementById("checkboxOutdoorLamp").checked = true
         } else {
             document.getElementById("checkboxOutdoorLamp").checked = false
         }
     }
-    if (deviceID === "Indoor lamp") {
+    if (_id === "Indoor lamp") {
         if (option.toString() === "true") {
             document.getElementById("checkboxIndoorLamp").checked = true
         } else {
@@ -139,7 +140,7 @@ function toggleLamp(deviceID, option) {
     }
 }
 
-function toggleCurtain(deviceID, option) {
+function toggleCurtain(_id, option) {
     if (option.toString() === "true") {
         document.getElementById("checkboxCurtain").checked = true
     } else {
@@ -147,7 +148,7 @@ function toggleCurtain(deviceID, option) {
     }
 }
 
-function toggleFan(deviceID, option) {
+function toggleFan(_id, option) {
     document.getElementById("fanSpeed").innerText = option
     document.getElementById("fanSlider").value = option
 }
@@ -163,14 +164,15 @@ function changeDevice(deviceName, deviceType) {
             on = document.getElementById("checkboxOutdoorLamp").checked
         if (deviceName === "Indoor lamp")
             on = document.getElementById("checkboxIndoorLamp").checked
-        socket.send("changeDeviceStatus={'_id':'" + deviceName + "', 'on':'" + on + "'}");
+        socket.send("changeDeviceStatus={'_id':'" + deviceName + "', 'status':'" + on + "'}");
+        console.log(deviceName +" = "+ on)
     }
     if (deviceType === "curtain") {
         let open = document.getElementById("checkboxCurtain").checked
-        socket.send("changeDeviceStatus={'_id':'" + deviceName + "', 'open':'" + open + "'}");
+        socket.send("changeDeviceStatus={'_id':'" + deviceName + "', 'status':'" + open + "'}");
     }
     if (deviceType === "fan") {
         let speed = document.getElementById("fanSlider").value
-        socket.send("changeDeviceStatus={'_id':'" + deviceName + "', 'speed':'" + speed + "'}");
+        socket.send("changeDeviceStatus={'_id':'" + deviceName + "', 'status':'" + speed + "'}");
     }
 }
