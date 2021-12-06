@@ -35,6 +35,9 @@ function getDevices(res) {
     for (i in json.temperatureSensorList) {
         devices.push(json.temperatureSensorList[i])
     }
+    for (i in json.alarmList) {
+        devices.push(json.alarmList[i])
+    }
     for (let i = 0; i < devices.length; i++) {
         let deviceName = devices[i]._id
         if (deviceName === "Kitchen Lamp") {
@@ -66,6 +69,18 @@ function getDevices(res) {
                 document.getElementById("checkboxCurtain").checked = true
             else
                 document.getElementById("checkboxCurtain").checked = false
+        }
+        if (deviceName === "alarm") {
+            if (devices[i].status === 1){
+                document.getElementById("checkboxAlarm").checked = true
+                document.getElementById("buttonAlarm").style.backgroundColor = "green";
+            }
+            else if (devices[i].status === 0){
+                document.getElementById("checkboxAlarm").checked = false
+                document.getElementById("buttonAlarm").style.backgroundColor = "green";
+            }
+            else
+            document.getElementById("buttonAlarm").style.backgroundColor = "red";
         }
         if (deviceName === "Livingroom Thermometer") {
             document.getElementById("temp").innerText = devices[i].status
@@ -102,10 +117,25 @@ function onBroadcast(res) {
         if (_id === "Bedroom Fan") {
             toggleFan("Bedroom Fan", option)
         }
+        if (_id === "alarm") {
+            toggleAlarm("alarm", option)
+        }
     } else {
         // Operation Failed
         let reason = json.reason
         console.log(reason)
+    }
+}
+
+function toggleAlarm(_id, option){
+    if (_id === "alarm") {
+        if (option.toString() === "1") {
+            document.getElementById("checkBoxAlarm").checked = true
+        } else if (option.toString() === "0"){
+            document.getElementById("checkBoxAlarm").checked = false
+        } else {
+            document.getElementById("buttonAlarm").style.backgroundColor = "red"
+        }
     }
 }
 
@@ -174,5 +204,10 @@ function changeDevice(deviceName, deviceType) {
     if (deviceType === "fan") {
         let speed = document.getElementById("fanSlider").value
         socket.send("changeDeviceStatus={'_id':'" + deviceName + "', 'status':'" + speed + "'}");
+    }
+    if (deviceType === "Alarm"){
+        let on = document.getElementById("checkBoxAlarm").checked 
+        socket.send("changeDeviceStatus={'_id':'" + deviceName + "', 'status':'" + on + "'}");
+        console.log(deviceName +" = "+ on)
     }
 }
