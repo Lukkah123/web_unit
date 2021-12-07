@@ -207,7 +207,11 @@ function changeDevice(deviceName, deviceType) {
     }
     if (deviceType === "Alarm"){
         let on = document.getElementById("checkboxAlarm").checked
-        socket.send("changeDeviceStatus={'_id':'" + deviceName + "', 'status':'" + on + "'}");
+        if(on === true){
+            socket.send("changeDeviceStatus={'_id':'" + deviceName + "', 'status':'1'}");
+        } else if (on === false){
+            socket.send("changeDeviceStatus={'_id':'" + deviceName + "', 'status':'0'}");
+        }
         console.log(deviceName +" = "+ on)
     }
 }
