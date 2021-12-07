@@ -130,10 +130,10 @@ function onBroadcast(res) {
 function toggleAlarm(_id, option){
     if (_id === "alarm") {
         if (option.toString() === "1") {
-            document.getElementById("checkBoxAlarm").checked = true
+            document.getElementById("checkboxAlarm").checked = true
         } else if (option.toString() === "0"){
-            document.getElementById("checkBoxAlarm").checked = false
-        } else {
+            document.getElementById("checkboxAlarm").checked = false
+        } else if (option.toString() === "2"){
             document.getElementById("buttonAlarm").style.backgroundColor = "red"
         }
     }
@@ -206,7 +206,7 @@ function changeDevice(deviceName, deviceType) {
         socket.send("changeDeviceStatus={'_id':'" + deviceName + "', 'status':'" + speed + "'}");
     }
     if (deviceType === "Alarm"){
-        let on = document.getElementById("checkBoxAlarm").checked 
+        let on = document.getElementById("checkboxAlarm").checked
         socket.send("changeDeviceStatus={'_id':'" + deviceName + "', 'status':'" + on + "'}");
         console.log(deviceName +" = "+ on)
     }
