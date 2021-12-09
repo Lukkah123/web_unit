@@ -135,6 +135,7 @@ function toggleAlarm(_id, option){
             document.getElementById("checkboxAlarm").checked = false
         } else if (option.toString() === "2"){
             document.getElementById("buttonAlarm").style.backgroundColor = "red"
+            alert("ALARM! INTRUDER!")
         }
     }
 }
