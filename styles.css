@@ -149,3 +149,12 @@ form{
     padding: 15px 15px;
     font-weight: bold;
 }
+
+.newDeviceTeleporter{
+    margin: 30px;
+    background-color:#6992bd;
+    border-radius: 20px;
+    box-shadow: 5px 5px 15px black;
+    padding: 15px 15px;
+    font-weight: bold;
+}
