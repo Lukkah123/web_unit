@@ -1,9 +1,13 @@
 <!DOCTYPE html>
 <html>
-<body>
+<head>
+    <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+</head>
+<body class="addDeviceBody">
 
 <h1>Add a new device</h1>
-<form>
+<form class="myForm">
     <input type="radio" id="lamp" name="newDevice" value="Lamp">
     <label for="lamp">Lamp</label><br> 
     <input type="radio" id="curtain" name="newDevice" value="Curtain">
@@ -14,7 +18,7 @@
     
   </form>
 
-  <button onclick="addDevice()">Add the new device</button>
+  <button class="addDeviceButton" onclick="addDevice()">Add the new device</button>
 
 <script>
 function addDevice() {
