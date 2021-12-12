@@ -14,11 +14,11 @@
     <label for="curtain">Curtain</label><br>
     <input type="radio" id="fan" name="newDevice" value="Fan">
     <label for="fan">Fan</label><br><br>
-    Enter device name: <input type="text" id="inputText" name="deviceName"><br><br>
-    
+    <input type="text" placeholder="Device name" id="inputText" name="deviceName">
+    <label for="name" class="form__label">Device Name</label>    
   </form>
 
-  <button class="addDeviceButton" onclick="addDevice()">Add the new device</button>
+  <button class="addDeviceButton" onclick="addDevice()">Add new device</button>
 
 <script>
 function addDevice() {
