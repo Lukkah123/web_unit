@@ -26,6 +26,9 @@ function getDevices(res) {
     for (i in json.lampList) {
         devices.push(json.lampList[i])
     }
+    for (i in json.heaterList) {
+        devices.push(json.heaterList[i])
+    }
     for (i in json.fanList) {
         devices.push(json.fanList[i])
     }
@@ -63,6 +66,18 @@ function getDevices(res) {
                 document.getElementById("checkboxIndoorLamp").checked = true
             else
                 document.getElementById("checkboxIndoorLamp").checked = false
+        }
+        if (deviceName === "House Heater") {
+            if (devices[i].status === true)
+                document.getElementById("checkboxHouseHeater").checked = true
+            else
+                document.getElementById("checkboxHouseHeater").checked = false
+        }
+        if (deviceName === "Upstairs heater") {
+            if (devices[i].status === true)
+                document.getElementById("checkboxUpstairsHeater").checked = true
+            else
+                document.getElementById("checkboxUpstairsHeater").checked = false
         }
         if (deviceName === "Livingroom Curtain") {
             if (devices[i].status === true)
@@ -111,6 +126,12 @@ function onBroadcast(res) {
         if (_id === "Indoor lamp") {
             toggleLamp("Indoor Lamp", option)
         }
+        if (_id === "House Heater") {
+            toggleHeater("House Heater", option)
+        }
+        if (_id === "Upstairs heater") {
+            toggleHeater("Upstairs heater", option)
+        }
         if (_id === "Livingroom Curtain") {
             toggleCurtain("Livingroom Curtain", option)
         }
@@ -136,6 +157,23 @@ function toggleAlarm(_id, option){
         } else if (option.toString() === "2"){
             document.getElementById("buttonAlarm").style.backgroundColor = "red"
             alert("ALARM! INTRUDER!")
+        }
+    }
+}
+
+function toggleHeater(_id, option) {
+    if (_id === "House Heater") {
+        if (option.toString() === "true") {
+            document.getElementById("checkboxHouseHeater").checked = true
+        } else {
+            document.getElementById("checkboxHouseHeater").checked = false
+        }
+    }
+    if (_id === "Upstairs heater") {
+        if (option.toString() === "true") {
+            document.getElementById("checkboxUpstairsHeater").checked = true
+        } else {
+            document.getElementById("checkboxUpstairsHeater").checked = false
         }
     }
 }
@@ -198,6 +236,16 @@ function changeDevice(deviceName, deviceType) {
         socket.send("changeDeviceStatus={'_id':'" + deviceName + "', 'status':'" + on + "'}");
         console.log(deviceName +" = "+ on)
     }
+    if (deviceType === "heater") {
+        let on;
+        if (deviceName === "House Heater")
+            on = document.getElementById("checkboxHouseHeater").checked
+        if (deviceName === "Upstairs heater")
+            on = document.getElementById("checkboxUpstairsHeater").checked
+        socket.send("changeDeviceStatus={'_id':'" + deviceName + "', 'status':'" + on + "'}");
+        console.log(deviceName +" = "+ on)
+    }
+    
     if (deviceType === "curtain") {
         let open = document.getElementById("checkboxCurtain").checked
         socket.send("changeDeviceStatus={'_id':'" + deviceName + "', 'status':'" + open + "'}");
